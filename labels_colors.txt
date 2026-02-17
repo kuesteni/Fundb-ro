@@ -1,5 +1,5 @@
-0 Rot
-1 Blau
-2 Schwarz
-3 Weiß
-4 Sonstige Farben
+Rot
+Blau
+Schwarz
+Weiß
+Sonstige Farben

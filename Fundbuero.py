@@ -1,4 +1,6 @@
+# ------------------------
 # app.py
+# ------------------------
 import streamlit as st
 import pandas as pd
 import os
@@ -13,16 +15,18 @@ st.set_page_config(page_title="Schul-Fundbörse", layout="wide")
 # Modelle laden
 # ------------------------
 model_clothes = load_model("keras_Model_clothes.h5", compile=False)
-class_names_clothes = [line.strip() for line in open("labels_clothes.txt", "r")]
+with open("labels_clothes.txt", "r") as f:
+    class_names_clothes = f.readlines()
 
 model_colors = load_model("keras_Model_colors.h5", compile=False)
-class_names_colors = [line.strip() for line in open("labels_colors.txt", "r")]
+with open("labels_colors.txt", "r") as f:
+    class_names_colors = f.readlines()
 
 # ------------------------
 # Kategorien
 # ------------------------
 haupt_kategorien = ["T-Shirt", "Pullover", "Brille"]
-farbe_kategorien = ["Blau", "Rot", "Schwarz", "Weiß"]
+farbe_kategorien = ["Blau", "Rot", "Schwarz", "Weiß", "Grün", "Grau", "Braun", "Sonstige"]
 
 # ------------------------
 # CSV-Datei zum Speichern
@@ -47,22 +51,42 @@ def predict_clothes(img: Image.Image):
 
     prediction = model_clothes.predict(data)
     index = np.argmax(prediction)
-    class_name = class_names_clothes[index]
+    class_name = class_names_clothes[index].strip()
+    
+    # Optional: Mapping für verschiedene Label-Varianten
+    mapping = {
+        "0 Brille": "Brille",
+        "glasses": "Brille",
+        "t-shirt": "T-Shirt",
+        "Tshirt": "T-Shirt",
+        "pullover": "Pullover",
+        "sweater": "Pullover"
+    }
+    class_name = mapping.get(class_name, class_name)
+
     confidence_score = prediction[0][index]
     return class_name, confidence_score
 
 def predict_color(img: Image.Image):
+    data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
     size = (224, 224)
     image_resized = ImageOps.fit(img, size, Image.Resampling.LANCZOS)
     image_array = np.asarray(image_resized)
     normalized_image_array = (image_array.astype(np.float32)/127.5)-1
-    data = np.ndarray(shape=(1,224,224,3), dtype=np.float32)
     data[0] = normalized_image_array
 
     prediction = model_colors.predict(data)
     index = np.argmax(prediction)
-    color_class = class_names_colors[index]
+    class_name = class_names_colors[index].strip()
+
+    # Entfernt führende Zahlen wie "0 Blau"
+    color_class = class_name[2:].strip() if len(class_name) > 2 else class_name
+
+    # Optional: Mindest-Confidence für Farberkennung
     confidence_score = prediction[0][index]
+    if confidence_score < 0.6:
+        color_class = "Sonstige"
+
     return color_class, confidence_score
 
 # ------------------------
@@ -140,4 +164,3 @@ elif choice == "Fundstücke durchsuchen":
         if row["Foto"]:
             st.image(row["Foto"], width=200)
         st.write("---")
-

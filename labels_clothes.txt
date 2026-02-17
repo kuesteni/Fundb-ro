@@ -1,0 +1,4 @@
+0 Pullover 
+1 Shirt
+2 Brille
+3 Sonstiges

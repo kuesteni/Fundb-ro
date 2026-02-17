@@ -1,6 +1,6 @@
-0 Rot
-1 Blau
-2 Weiß
-3 Schwarz
-4 Grün 
-5 Sonstige
+Rot
+Blau
+Weiß
+Schwarz
+Grün 
+Sonstige

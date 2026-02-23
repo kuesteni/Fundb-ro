@@ -1,5 +1,5 @@
 streamlit==1.28.0
-pandas==2.2.4
+pandas==2.1.2
 numpy==1.25.2
 Pillow==10.1.0
 keras==2.12.0

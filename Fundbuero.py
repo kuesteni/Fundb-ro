@@ -17,9 +17,9 @@ st.set_page_config(page_title="Schul-Fundbörse", layout="wide")
 # Cloudinary Konfiguration (SICHER)
 # ------------------------
 cloudinary.config(
-    cloud_name=os.getenv("CLOUD_NAME"),
-    api_key=os.getenv("API_KEY"),
-    api_secret=os.getenv("API_SECRET")
+    cloud_name=os.getenv("ducsrjpz9"),
+    api_key=os.getenv("633744854218788"),
+    api_secret=os.getenv("DeHZyqChMgUGdt7UEooyXVrsR2s")
 )
 
 # ------------------------
@@ -180,7 +180,6 @@ if choice == "Gegenstand melden":
             else:
                 st.warning("Bitte ein Foto hochladen!")
 
-
 # ------------------------
 # DURCHSUCHEN
 # ------------------------
@@ -228,7 +227,7 @@ elif choice == "Galerie":
 
     st.write(f"{len(ergebnisse)} Ergebnis(se) gefunden:")
 
-    # Bilder im Grid anzeigen
+    # Bilder im Grid anzeigen (3 Spalten)
     cols = st.columns(3)
     for idx, (_, row) in enumerate(ergebnisse.iterrows()):
         with cols[idx % 3]:

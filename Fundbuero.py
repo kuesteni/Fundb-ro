@@ -1,5 +1,5 @@
 # ------------------------
-# app.py
+# app.py (angepasst)
 # ------------------------
 import streamlit as st
 import pandas as pd
@@ -148,7 +148,7 @@ if choice == "Gegenstand melden":
 
                 img = Image.open(uploaded_file).convert("RGB")
 
-                # KI
+                # KI Vorhersagen
                 item_class, conf_item = predict_clothes(img)
                 if item_class not in haupt_kategorien:
                     item_class = "Sonstige"
@@ -159,23 +159,32 @@ if choice == "Gegenstand melden":
 
                 typ = f"{color_class} {item_class}"
 
-                # ☁️ Upload zu Cloudinary
-                upload_result = cloudinary.uploader.upload(
-                    uploaded_file,
-                    folder="schul_fundboerse",
-                    resource_type="image"
-                )
+                # ☁️ Upload zu Cloudinary (fix: Empty file vermeiden)
+                try:
+                    uploaded_file.seek(0)  # Stream auf Anfang zurücksetzen
+                    public_id = uploaded_file.name.split('.')[0]
 
-                foto_url = upload_result["secure_url"]
+                    upload_result = cloudinary.uploader.upload(
+                        uploaded_file,
+                        folder="schul_fundboerse",
+                        public_id=public_id,
+                        overwrite=True,
+                        resource_type="image"
+                    )
 
-                # Speichern
-                save_entry(typ, beschreibung, ort, foto_url)
+                    foto_url = upload_result["secure_url"]
 
-                # Anzeige
-                st.image(foto_url, width=250)
-                st.write(f"Erkannt: {typ}")
-                st.write(f"Kleidungsstück Confidence: {conf_item:.2f}")
-                st.write(f"Farbe Confidence: {conf_color:.2f}")
+                    # Speichern
+                    save_entry(typ, beschreibung, ort, foto_url)
+
+                    # Anzeige
+                    st.image(foto_url, width=250)
+                    st.write(f"Erkannt: {typ}")
+                    st.write(f"Kleidungsstück Confidence: {conf_item:.2f}")
+                    st.write(f"Farbe Confidence: {conf_color:.2f}")
+
+                except Exception as e:
+                    st.error(f"❌ Upload fehlgeschlagen: {e}")
 
             else:
                 st.warning("Bitte ein Foto hochladen!")

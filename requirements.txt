@@ -1,7 +1,7 @@
 streamlit==1.28.0
 pandas==2.1.2
-numpy==1.25.2
+numpy==1.23.5        # passt zu TF 2.12
 Pillow==10.1.0
 keras==2.12.0
 tensorflow==2.12.0
-cloudinary==2.9.1
+cloudinary==1.30.0   # letzte Version kompatibel mit Python 3.10

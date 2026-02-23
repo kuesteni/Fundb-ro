@@ -14,12 +14,12 @@ import cloudinary.uploader
 st.set_page_config(page_title="Schul-Fundbörse", layout="wide")
 
 # ------------------------
-# Cloudinary Konfiguration (SICHER)
+# Cloudinary Konfiguration über Secrets
 # ------------------------
 cloudinary.config(
-    cloud_name=os.getenv("ducsrjpz9"),
-    api_key=os.getenv("633744854218788"),
-    api_secret=os.getenv("DeHZyqChMgUGdt7UEooyXVrsR2s")
+    cloud_name=os.getenv("CLOUD_NAME"),
+    api_key=os.getenv("API_KEY"),
+    api_secret=os.getenv("API_SECRET")
 )
 
 # ------------------------
